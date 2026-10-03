@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================
+   Perfect Global Dark Mode Styles
+   ========================================== */
+
+html.dark body {
+  background-color: #0b0f19 !important; /* Deep dark background */
+  color: #f1f5f9 !important;            /* Bright readable text color */
+}
+
+/* Sabhi headings, paragraphs, labels aur text ko bright white/light kar dein */
+html.dark h1, 
+html.dark h2, 
+html.dark h3, 
+html.dark h4, 
+html.dark h5, 
+html.dark h6, 
+html.dark p, 
+html.dark span, 
+html.dark label, 
+html.dark a,
+html.dark li {
+  color: #f1f5f9 !important;
+}
+
+/* Chote ya secondary text (jaise subtitles/descriptions) ke liye thoda softer light gray */
+html.dark .text-slate-500,
+html.dark .text-gray-500,
+html.dark .text-slate-600 {
+  color: #94a3b8 !important; 
+}
+
+/* Cards aur white background wale boxes ko dark karein */
+html.dark .bg-white,
+html.dark [class*="bg-white"] {
+  background-color: #1e293b !important; /* Slate dark box background */
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
+}
+
+/* Page background containers ko dark karein */
+html.dark .bg-gray-50,
+html.dark .bg-slate-50,
+html.dark .bg-gray-100,
+html.dark .bg-slate-100 {
+  background-color: #0b0f19 !important;
+}
+
+/* Inputs, selects aur textareas */
+html.dark input, 
+html.dark select, 
+html.dark textarea {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
+}
+
+/* Dropdown options fix (agar browser default white de raha ho) */
+html.dark select option {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+}
