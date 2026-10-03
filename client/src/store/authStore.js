@@ -4,7 +4,7 @@ const useAuthStore = create((set) => ({
   user: JSON.parse(localStorage.getItem('user')) || null,
   token: localStorage.getItem('token') || null,
   
-  // Signup ya Login ke baad call hoga
+  
   setCredentials: (user, token) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', token);

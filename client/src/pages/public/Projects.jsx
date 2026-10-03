@@ -17,45 +17,50 @@ const Projects = () => {
     ? workspacesData
     : workspacesData?.workspaces || [];
 
-  const activeWorkspaceId = selectedWorkspaceId || (workspaces[0]?._id || "");
+  const activeWorkspaceId = selectedWorkspaceId || workspaces[0]?._id || "";
 
-  // 1. Agar "all" selected hai, toh saare workspaces ke projects fetch karne ke liye function
+  
   const fetchAllProjects = async () => {
     const token = localStorage.getItem("token");
     const headers = { Authorization: `Bearer ${token}` };
     try {
-      // Har workspace ke liye projects fetch karein
+     
       const promises = workspaces.map(async (ws) => {
         const wsId = ws._id || ws.id;
-        const res = await axios.get(`http://localhost:3000/api/projects/getProjects?workspaceId=${wsId}`, { headers });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/projects/getProjects?workspaceId=${wsId}`,
+          { headers },
+        );
         const resData = res.data;
         let projs = [];
-        if (resData && Array.isArray(resData.projects)) projs = resData.projects;
+        if (resData && Array.isArray(resData.projects))
+          projs = resData.projects;
         else if (Array.isArray(resData)) projs = resData;
-        // Workspace ka naam bhi project object mein attach kar dete hain taake pata chale kis workspace ka hai
-        return projs.map(p => ({ ...p, workspaceName: ws.name }));
+       
+        return projs.map((p) => ({ ...p, workspaceName: ws.name }));
       });
 
       const results = await Promise.all(promises);
-      return results.flat(); // Sabhi arrays ko mila kar aik single array bana dein
+      return results.flat(); 
     } catch (err) {
       console.error("Error fetching all projects:", err);
       return [];
     }
   };
 
-  // 2. Agar "all" selected ho toh all projects query chalayen, warna normal useProjects hook
+  
   const { data: singleWsProjects = [], isLoading: singleLoading } = useProjects(
-    activeWorkspaceId !== "all" ? activeWorkspaceId : null
+    activeWorkspaceId !== "all" ? activeWorkspaceId : null,
   );
 
   const { data: allWsProjects = [], isLoading: allLoading } = useQuery({
-    queryKey: ["allWorkspacesProjects", workspaces.map(w => w._id)],
+    queryKey: ["allWorkspacesProjects", workspaces.map((w) => w._id)],
     queryFn: fetchAllProjects,
     enabled: activeWorkspaceId === "all" && workspaces.length > 0,
   });
 
-  const projects = activeWorkspaceId === "all" ? allWsProjects : singleWsProjects;
+  const projects =
+    activeWorkspaceId === "all" ? allWsProjects : singleWsProjects;
   const isLoading = activeWorkspaceId === "all" ? allLoading : singleLoading;
 
   return (
@@ -70,7 +75,7 @@ const Projects = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Workspace Selector Dropdown with All Workspaces option */}
+           
             {workspaces.length > 0 && (
               <select
                 value={activeWorkspaceId}
@@ -99,7 +104,9 @@ const Projects = () => {
 
         {showCreateModal && activeWorkspaceId !== "all" && (
           <Card className="p-6 mb-8 max-w-xl">
-            <h2 className="text-lg font-semibold text-slate-800 mb-4">Create New Project</h2>
+            <h2 className="text-lg font-semibold text-slate-800 mb-4">
+              Create New Project
+            </h2>
             <ProjectForm
               workspaceId={activeWorkspaceId}
               onSuccess={() => setShowCreateModal(false)}
@@ -108,7 +115,9 @@ const Projects = () => {
         )}
 
         {isLoading ? (
-          <p className="text-center py-16 text-slate-400">Loading projects...</p>
+          <p className="text-center py-16 text-slate-400">
+            Loading projects...
+          </p>
         ) : (
           <ProjectList projects={projects} />
         )}

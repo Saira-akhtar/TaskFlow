@@ -17,12 +17,12 @@ const fetchMyProfile = async () => {
   }
 
   const { data } = await axios.get(
-    "http://localhost:3000/api/profile/me",
+    import.meta.env.VITE_API_URL + "/profile/me",
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   console.log("BACKEND PROFILE RESPONSE:", data);
@@ -42,13 +42,13 @@ const updateMyProfileApi = async (updatedData) => {
   }
 
   const { data } = await axios.patch(
-    "http://localhost:3000/api/profile/me",
+    import.meta.env.VITE_API_URL + "/profile/me",
     updatedData,
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
   console.log("UPDATE PROFILE RESPONSE:", data);
@@ -64,8 +64,6 @@ const Profile = () => {
 
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
-
-  
 
   // ==========================================
   // FETCH PROFILE
@@ -114,7 +112,7 @@ const Profile = () => {
       setMessage(
         error.response?.data?.message ||
           error.message ||
-          "Failed to update profile."
+          "Failed to update profile.",
       );
 
       setIsError(true);
@@ -140,8 +138,6 @@ const Profile = () => {
 
     profileMutation.mutate(updatedData);
   };
-
-
 
   // ==========================================
   // LOADING
@@ -179,7 +175,6 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-4xl mx-auto">
-
         {/* ======================================
             HEADER
         ====================================== */}
@@ -209,19 +204,16 @@ const Profile = () => {
         )}
 
         <div className="space-y-6">
-
           {/* ====================================
               PERSONAL INFORMATION
           ==================================== */}
           <Card className="p-6">
-
             <h2 className="text-lg font-semibold text-slate-800 mb-4">
               Personal Information
             </h2>
 
             {/* Avatar + Name */}
             <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
-
               <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-2xl flex-shrink-0">
                 {currentProfile?.name
                   ? currentProfile.name.charAt(0).toUpperCase()
@@ -237,20 +229,14 @@ const Profile = () => {
                   {currentProfile?.role || "User"}
                 </p>
               </div>
-
             </div>
 
             {/* ==================================
                 PROFILE FORM
             ================================== */}
-            <form
-              onSubmit={handleProfileSubmit}
-              className="space-y-4"
-            >
-
+            <form onSubmit={handleProfileSubmit} className="space-y-4">
               {/* Full Name + Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
                 <Input
                   name="name"
                   label="Full Name"
@@ -266,7 +252,6 @@ const Profile = () => {
                   defaultValue={currentProfile?.email || ""}
                   disabled={profileMutation.isPending}
                 />
-
               </div>
 
               {/* Job Title */}
@@ -296,25 +281,17 @@ const Profile = () => {
 
               {/* Save Button */}
               <div className="flex justify-end pt-2">
-
                 <Button
                   type="submit"
                   variant="primary"
                   size="md"
                   disabled={profileMutation.isPending}
                 >
-                  {profileMutation.isPending
-                    ? "Saving..."
-                    : "Save Changes"}
+                  {profileMutation.isPending ? "Saving..." : "Save Changes"}
                 </Button>
-
               </div>
-
             </form>
           </Card>
-
-         
-
         </div>
       </div>
     </div>

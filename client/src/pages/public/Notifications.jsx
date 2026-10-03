@@ -6,29 +6,40 @@ import { useState } from "react";
 // API helper functions
 const fetchNotifications = async () => {
   const token = localStorage.getItem("token");
-  const { data } = await axios.get("http://localhost:3000/api/notifications", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const { data } = await axios.get(
+    import.meta.env.VITE_API_URL + "/notifications",
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
   return data;
 };
 
 const markNotificationRead = async (id) => {
   const token = localStorage.getItem("token");
-  await axios.patch(`http://localhost:3000/api/notifications/${id}/read`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  await axios.patch(
+    `${import.meta.env.VITE_API_URL}/notifications/${id}/read`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
 };
 
 const markAllNotificationsRead = async () => {
   const token = localStorage.getItem("token");
-  await axios.patch("http://localhost:3000/api/notifications/read-all", {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  await axios.patch(
+    import.meta.env.VITE_API_URL + "/notifications/read-all",
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
 };
 
 const deleteNotificationApi = async (id) => {
   const token = localStorage.getItem("token");
-  await axios.delete(`http://localhost:3000/api/notifications/${id}`, {
+  await axios.delete(`${import.meta.env.VITE_API_URL}/notifications/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
@@ -83,7 +94,11 @@ const Notifications = () => {
   }
 
   if (isError) {
-    return <div className="text-center py-12 text-red-500 text-sm">Failed to load notifications. Please try again.</div>;
+    return (
+      <div className="text-center py-12 text-red-500 text-sm">
+        Failed to load notifications. Please try again.
+      </div>
+    );
   }
 
   return (
@@ -147,14 +162,20 @@ const Notifications = () => {
             <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">
               🔔
             </div>
-            <p className="text-sm font-medium text-slate-700">No notifications found</p>
-            <p className="text-xs text-slate-400 mt-1">You do not have any notifications in this view.</p>
+            <p className="text-sm font-medium text-slate-700">
+              No notifications found
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              You do not have any notifications in this view.
+            </p>
           </div>
         ) : (
           filteredNotifications.map((notif) => (
             <div
               key={notif._id}
-              onClick={() => !notif.isRead && markReadMutation.mutate(notif._id)}
+              onClick={() =>
+                !notif.isRead && markReadMutation.mutate(notif._id)
+              }
               className={`group relative border rounded-xl p-4 transition-all duration-200 flex items-start justify-between gap-4 cursor-pointer ${
                 notif.isRead
                   ? "bg-white border-slate-200 hover:border-slate-300"
@@ -168,7 +189,9 @@ const Notifications = () => {
               <div className={`flex-1 ${!notif.isRead ? "pl-3" : ""}`}>
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-semibold text-slate-800">
-                    {notif.relatedTask?.title ? `Task: ${notif.relatedTask.title}` : "System Notification"}
+                    {notif.relatedTask?.title
+                      ? `Task: ${notif.relatedTask.title}`
+                      : "System Notification"}
                   </h3>
                   {!notif.isRead && (
                     <span className="text-[10px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
@@ -186,7 +209,12 @@ const Notifications = () => {
                     {new Date(notif.createdAt).toLocaleDateString(undefined, {
                       month: "short",
                       day: "numeric",
-                    })} at {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    })}{" "}
+                    at{" "}
+                    {new Date(notif.createdAt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </span>
                   {notif.relatedProject?.name && (
                     <>
@@ -209,8 +237,18 @@ const Notifications = () => {
                   className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition"
                   title="Delete notification"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
                   </svg>
                 </button>
               </div>

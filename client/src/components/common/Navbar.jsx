@@ -10,12 +10,14 @@ const fetchNotificationCount = async () => {
   const token = localStorage.getItem("token");
   if (!token) return 0;
   try {
-    const { data } = await axios.get("http://localhost:3000/api/notifications", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await axios.get(
+      import.meta.env.VITE_API_URL + "/notifications",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     return data?.unreadCount || 0;
-  } 
-  catch (error) {
+  } catch (error) {
     console.error("Error fetching notification count:", error);
     return 0;
   }
@@ -30,9 +32,12 @@ const Navbar = () => {
   // Fetch logged-in user profile to get the real name dynamically
   const fetchNavbarProfile = async () => {
     if (!token) return null;
-    const { data } = await axios.get("http://localhost:3000/api/profile/me", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await axios.get(
+      import.meta.env.VITE_API_URL + "/profile/me",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     return data;
   };
 
@@ -71,8 +76,13 @@ const Navbar = () => {
     <nav className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-3 flex items-center justify-between relative transition-colors">
       {/* Logo & Main Nav */}
       <div className="flex items-center gap-8">
-        <NavLink to="/projects" className="flex items-center gap-2 font-bold text-xl text-indigo-600 dark:text-indigo-400">
-          <span className="bg-indigo-600 text-white px-2.5 py-1 rounded-lg text-sm">T</span>
+        <NavLink
+          to="/projects"
+          className="flex items-center gap-2 font-bold text-xl text-indigo-600 dark:text-indigo-400"
+        >
+          <span className="bg-indigo-600 text-white px-2.5 py-1 rounded-lg text-sm">
+            T
+          </span>
           TaskFlow
         </NavLink>
 
@@ -92,7 +102,6 @@ const Navbar = () => {
 
       {/* Right Side: Notification Icon & Profile Dropdown */}
       <div className="flex items-center gap-5 relative">
-        
         {/* Notification Icon Link */}
         <NavLink
           to="/notifications"
@@ -120,7 +129,7 @@ const Navbar = () => {
               d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
             />
           </svg>
-          
+
           {/* Dynamic Notification Badge */}
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1">
